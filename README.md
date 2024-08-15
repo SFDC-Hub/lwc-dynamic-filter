@@ -31,8 +31,7 @@ To use the Dynamic Filter component in your Salesforce org:
 The Dynamic Filter component accepts the following attributes:
 
 - `filters`: JSON array containing field attribute configurations for filters. Each filter object should include the following attributes:
-  - `api`: API name of the field in Datatable.
-  - `name`: Name of the field.
+  - `name`: API name of the field in Datatable.
   - `type`: Type of the field (text, number, picklist, date, datetime, color).
   - `label`: Label of the field in the filter.
 - `tdata`: JSON array containing the original data for the table.
@@ -44,8 +43,8 @@ Here's an example of how to use the Dynamic Filter component:
 ```javascript
 // Define filters configuration
 const filters = [
-    { api: 'name', name: 'name', type: 'text', label: 'Name' },
-    { api: 'status', name: 'status', type: 'picklist', label: 'Status'}
+    { name: 'name', type: 'text', label: 'Name' },
+    { name: 'status', type: 'picklist', label: 'Status'}
 ];
 
 
