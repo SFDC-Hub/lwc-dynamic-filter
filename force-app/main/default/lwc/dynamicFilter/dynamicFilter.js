@@ -20,7 +20,7 @@ export default class DynamicFilter extends LightningElement {
         this.originalTdata.forEach(item => {
             this.filters.forEach(filter => {
                 if (filter.type === 'picklist') {
-                    const value = item[filter.api];
+                    const value = item[filter.name];
                     if (!filter.options.includes(value) && value != null) {
                         filter.options.push(value);
                     }
@@ -37,7 +37,7 @@ export default class DynamicFilter extends LightningElement {
     }
 
     handleChange(event) {
-        this.filters.find(filter => filter.api === event.target.name).value = event.target.value;
+        this.filters.find(filter => filter.name === event.target.name).value = event.target.value;
         this.filterData();
     }
 
@@ -47,10 +47,10 @@ export default class DynamicFilter extends LightningElement {
                 if (!filter.value) {
                     return true;
                 }
-                if (filter.type == 'text' || filter.type == 'picklist' || item.type == 'number' || item.type == 'tel') {
-                    return String(String(item[filter.api])).toLowerCase().includes(String(filter.value).toLowerCase());
-                } else if (item.type == 'date' || item.type == 'datetime' || item.type == 'color') {
-                    return String(item[filter.api]) == (filter.value);
+                if (filter.type == 'text' || filter.type == 'number' || filter.type == 'tel') {
+                    return String(String(item[filter.name])).toLowerCase().includes(String(filter.value).toLowerCase());
+                } else if (filter.type == 'picklist' || filter.type == 'date' || filter.type == 'datetime' || filter.type == 'color') {
+                    return String(item[filter.name]) == (filter.value);
                 }
             });
         });
