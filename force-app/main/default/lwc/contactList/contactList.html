@@ -1,0 +1,14 @@
+<template>
+    <lightning-card>
+        <template if:true={contacts}>
+            <c-dynamic-filter filters={filters} tdata={contacts} onfilter={handleFilter}></c-dynamic-filter>
+            <br>
+            <lightning-datatable
+                key-field="Id"
+                data={contacts}
+                columns={columns}
+            >
+           </lightning-datatable>
+        </template>
+    </lightning-card>
+</template>
