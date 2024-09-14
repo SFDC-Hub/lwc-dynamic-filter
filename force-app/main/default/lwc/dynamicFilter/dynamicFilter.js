@@ -20,7 +20,7 @@ export default class DynamicFilter extends LightningElement {
         this.originalTdata.forEach(item => {
             this.filters.forEach(filter => {
                 if (filter.type === 'picklist') {
-                    const value = item[filter.api];
+                    const value = item[filter.fieldName];
                     if (!filter.options.includes(value) && value != null) {
                         filter.options.push(value);
                     }
@@ -37,7 +37,7 @@ export default class DynamicFilter extends LightningElement {
     }
 
     handleChange(event) {
-        this.filters.find(filter => filter.api === event.target.name).value = event.target.value;
+        this.filters.find(filter => filter.fieldName === event.target.name).value = event.target.value;
         this.filterData();
     }
 
@@ -47,10 +47,12 @@ export default class DynamicFilter extends LightningElement {
                 if (!filter.value) {
                     return true;
                 }
-                if (filter.type == 'text' || filter.type == 'picklist' || item.type == 'number' || item.type == 'tel') {
-                    return String(String(item[filter.api])).toLowerCase().includes(String(filter.value).toLowerCase());
-                } else if (item.type == 'date' || item.type == 'datetime' || item.type == 'color') {
-                    return String(item[filter.api]) == (filter.value);
+                if (filter.type == 'text' || filter.type == 'picklist'  || filter.type == 'tel') {
+                    return String(String(item[filter.fieldName])).toLowerCase().includes(String(filter.value).toLowerCase());
+                } else if (filter.type == 'color') {
+                    return String(item[filter.fieldName]) == (filter.value);
+                } else if(filter.type == 'date' || filter.type == 'datetime' || filter.type == 'number'){
+                    this.compare(item[filter.fieldName], filter);
                 }
             });
         });
@@ -83,4 +85,31 @@ export default class DynamicFilter extends LightningElement {
         this.filters = JSON.parse(JSON.stringify(this.filters));
         this.sendData(this.originalTdata);
     }
+    
+    compare(item, filter) {
+        let value = item[filter.fieldName].valueOf();
+        let filterValue = filter.value.valueOf();
+        switch (filter.comparator) {
+            case ('==' || '' || undefined):
+                return value == filterValue;
+            case '===':
+                return value === filterValue;
+            case '!=':
+                return value != filterValue;
+            case '!==':
+                return value !== filterValue;
+            case '>':
+                return value > filterValue;
+            case '>=':
+                return value >= filterValue;
+            case '<':
+                return value < filterValue;
+            case '<=':
+                return value <= filterValue;
+            default:
+                throw new Error(`Unsupported comparator: ${filter.comparator}`);
+        }
+    }
+    
+    
 }
